@@ -1,4 +1,6 @@
 import { beginWork } from "./ReactFiberBeginWork";
+import completeWork from "./ReactFiberCompleteWork";
+import commitWork from "./ReactFiberCommit";
 // 负责整个react的执行流程
 let wip = null; // work iun progress 保存当前进行工作的fiber
 let wipRoot = null; // 保存当前进行工作的fiber的根节点
@@ -54,5 +56,14 @@ function performUnitOfWork() {
   //如果没有节点要执行了，说明fiber树已经处理完了
   wip = null;
 }
-function commitRoot() {}
+/**
+ * 执行该方法的时候，说明整个节点的协调工作已经完成
+ * 解析来进行渲染
+ */
+function commitRoot() {
+  commitWork(wipRoot);
+  wipRoot = null;
+}
+
+
 export default scheduleUpdateOnFiber;
