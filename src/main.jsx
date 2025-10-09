@@ -9,13 +9,10 @@ function test() {
 ReactDom.createRoot(document.getElementById("root")).render(
   <div id="oDiv" className="test" onChange={test}>
     <ul>
-      <li>1</li>
-      <li>2</li>
-      <li>3</li>
-      <li>4</li>
-      <li>5</li>
-      <li>6</li>
-      <li>7</li>
+      <li>苹果</li>
+      <li>香蕉</li>
+      <li>橘子</li>
     </ul>
+    <p>123</p>
   </div>
 );
