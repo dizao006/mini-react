@@ -7,12 +7,5 @@ function test() {
   console.log(test);
 }
 ReactDom.createRoot(document.getElementById("root")).render(
-  <div id="oDiv" className="test" onChange={test}>
-    <ul>
-      <li>苹果</li>
-      <li>香蕉</li>
-      <li>橘子</li>
-    </ul>
-    <p>123</p>
-  </div>
+  <App id="test"></App>
 );

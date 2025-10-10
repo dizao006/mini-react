@@ -11,7 +11,6 @@ function updateContainer(childrenTree, container) {
     type: container.nodeName.toLowerCase(),
     stateNode: container,
   });
-  console.log(fiber, "fiber");
   scheduleUpdateOnFiber(fiber);
   return fiber;
 }

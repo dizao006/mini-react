@@ -26,9 +26,13 @@ function createFiber(vnode, returnFiber) {
     alternate: null, // 旧的fiber 双缓冲
   };
   //剩下一个tag，取决于fiber的type值,不同的fiber类型有不同的tag
+
   if (typeof vnode.type === "string") {
     fiber.tag = HostComponent;
   } else if (typeof vnode.type === "function") {
+    // 函数组件的type是函数
+    // 类组件的type也是函数
+    // 所以判断是否为类组件，需要判断type是否存在isReactComponent属性
     if (vnode.type.prototype.isReactComponent) {
       fiber.tag = ClassComponent;
     } else {
@@ -43,7 +47,6 @@ function createFiber(vnode, returnFiber) {
   } else {
     fiber.tag = Fragment;
   }
-  console.log(fiber);
   return fiber;
 }
 
