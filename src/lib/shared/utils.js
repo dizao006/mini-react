@@ -61,3 +61,7 @@ export function updateNode(stateNode, preVal, nextVal) {
     }
   });
 }
+// 获取当前时间
+export function getCurrentTime() {
+  return performance.now();
+}

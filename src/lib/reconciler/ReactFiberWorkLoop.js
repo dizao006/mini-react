@@ -1,6 +1,7 @@
 import { beginWork } from "./ReactFiberBeginWork";
 import completeWork from "./ReactFiberCompleteWork";
 import commitWork from "./ReactFiberCommit";
+import schedulerCallBack from "../scheduler/Scheduler";
 // 负责整个react的执行流程
 let wip = null; // work iun progress 保存当前进行工作的fiber
 let wipRoot = null; // 保存当前进行工作的fiber的根节点
@@ -8,20 +9,34 @@ function scheduleUpdateOnFiber(fiber) {
   wip = fiber;
   wipRoot = fiber;
   // 后续使用schedule
-  requestIdleCallback(workLoop);
+  schedulerCallBack(workLoop);
 }
+// /**
+//  * 在每一帧有空闲的时候执行
+//  * @param {} deadline
+//  */
+// function workLoop(deadline) {
+//   while (wip && deadline.timeRemaining() > 0) {
+//     //说明有需要进行处理的fiber，并且也有时间处理
+//     performUnitOfWork(); //处理fiber节点
+//   }
+//   //没时间或wip为null，说明不需要处理
+//   // 全部执行完，则需要渲染
+//   if (!wip) {
+//     commitRoot();
+//   }
+// }
 /**
- * 在每一帧有空闲的时候执行
- * @param {} deadline
+ *
+ * @param {*} time 时间参数，如果超过改时间则不处理下一个fiber
  */
-function workLoop(deadline) {
-  while (wip && deadline.timeRemaining() > 0) {
-    //说明有需要进行处理的fiber，并且也有时间处理
-    performUnitOfWork(); //处理fiber节点
+function workLoop(time) {
+  while (wip) {
+    if (time < 0) return false;
+    // 说明时间够用，处理fiber
+    performUnitOfWork();
   }
-  //没时间或wip为null，说明不需要处理
-  // 全部执行完，则需要渲染
-  if (!wip) {
+  if (!wip && wipRoot) {
     commitRoot();
   }
 }
@@ -64,6 +79,5 @@ function commitRoot() {
   commitWork(wipRoot);
   wipRoot = null;
 }
-
 
 export default scheduleUpdateOnFiber;
