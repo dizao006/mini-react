@@ -29,7 +29,6 @@ export function updateFunctionComponent(wip) {
   const { type, props } = wip;
   // 执行函数组件，获取返回的虚拟dom为children
   const nextChildren = type(props);
-  console.log(wip, nextChildren, "=====");
   // 更新子节点
   reconCileChildren(wip, nextChildren);
 }
