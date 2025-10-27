@@ -24,10 +24,11 @@ function createFiber(vnode, returnFiber) {
     flags: Placement, // 副作用
     index: null, // 当前节点在当前层级的位置
     alternate: null, // 旧的fiber 双缓冲
+    memoizedState: null, //  memoizedState: 用于存储hooks的状态
   };
   //剩下一个tag，取决于fiber的type值,不同的fiber类型有不同的tag
 
-  if (typeof vnode.type === "string") {
+  if (typeof vnode.type === "string" || typeof vnode.type === "number") {
     fiber.tag = HostComponent;
   } else if (typeof vnode.type === "function") {
     // 函数组件的type是函数

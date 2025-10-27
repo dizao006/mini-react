@@ -1,3 +1,5 @@
+import { Placement, Update, updateNode } from "../shared/utils";
+
 /**
  *
  * @param {*} wip
@@ -18,9 +20,15 @@ function commitWork(wip) {
 function commitNode(wip) {
   // 1拿到fiber所对于的父节点的dom对象
   const parentDom = getParentDom(wip.return);
-  // 2 进行dom操作
-  if (wip.stateNode) {
+  // 从fiber对象上拿到flags和stateNode
+  const { flags, stateNode } = wip;
+  // 根据不同的flags做不同的操作
+  if (flags & Placement && stateNode) {
     parentDom.appendChild(wip.stateNode);
+  }
+  // 2 更新属性的操作
+  if (flags & Update && stateNode) {
+    updateNode(stateNode, wip.alternate.props, wip.props);
   }
 }
 function getParentDom(wip) {

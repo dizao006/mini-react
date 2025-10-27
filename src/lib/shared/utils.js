@@ -21,7 +21,7 @@ export function updateNode(stateNode, preVal, nextVal) {
   Object.keys(preVal).forEach((k) => {
     if (k === "children") {
       // 需要判断children是否为字符串，如果是字符则代表为文本节点
-      if (typeof preVal[k] === "string") {
+      if (typeof preVal[k] === "string" || typeof preVal[k] === "number") {
         stateNode.textContent = "";
       } else if (k.startsWith("on")) {
         // 说明绑定的事件，对旧值进行移除
@@ -43,7 +43,7 @@ export function updateNode(stateNode, preVal, nextVal) {
   // 对新值进行处理，与上面反正操作
   Object.keys(nextVal).forEach((k) => {
     if (k === "children") {
-      if (typeof nextVal[k] === "string") {
+      if (typeof nextVal[k] === "string" || typeof nextVal[k] === "number") {
         stateNode.textContent = nextVal[k];
       }
     } else if (k.startsWith("on")) {
@@ -54,10 +54,7 @@ export function updateNode(stateNode, preVal, nextVal) {
       }
       stateNode.addEventListener(eventName, nextVal[k]);
     } else {
-      // 说明普通属性
-      if (k in nextVal) {
-        stateNode[k] = nextVal[k];
-      }
+      stateNode[k] = nextVal[k];
     }
   });
 }

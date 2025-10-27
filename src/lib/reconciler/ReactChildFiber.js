@@ -13,7 +13,7 @@ import { Update } from "../shared/utils";
  * @param {*} children 子节点 Vnode数组
  */
 export function reconCileChildren(returnFibers, children) {
-  if (typeof children === "string") {
+  if (typeof children === "string" || typeof children === "number") {
     // 文本节点 不需要处理，已经在updateNode中处理过了
     return;
   }
@@ -50,7 +50,7 @@ export function reconCileChildren(returnFibers, children) {
   // 第一轮遍历
   for (; oldFiber && i < newChildren.length; i++) {
     // 第一次并不会进入，一开始并不存在oldfiber
-    const newChild = newChildren;
+    const newChild = newChildren[i];
     if (newChild === null) continue; // 如果为null，则跳过当前循环
     // 在判断能否复用之前，先给nextOldFiber赋值
     // 一种特殊情况，比如1 2 3 4 5  下标对应的 0 1 2 3 4，现在进行了一些修改，只剩下了5和4
@@ -113,7 +113,7 @@ export function reconCileChildren(returnFibers, children) {
   if (!oldFiber) {
     // 说明是初次渲染,需要将newChildren数组的每个元素都生成一个fiber对象
     for (; i < newChildren.length; i++) {
-      const newChildVnode = createFiber(newChildren[i]);
+      const newChildVnode = newChildren[i]
       if (newChildVnode === null) continue;
       // 下一步根据vnode生成新的fiber
       const newFiber = createFiber(newChildVnode, returnFibers);
@@ -148,7 +148,7 @@ export function reconCileChildren(returnFibers, children) {
     // 根据当前节点的vNode生成新的fiber
     const newFiber = createFiber(newChild, returnFibers);
     // 接下来去map中寻找能否复用的
-    const matchedFiber = existingChildren.get(newFiber.key | newFiber.index);
+    const matchedFiber = existingChildren.get(newFiber.key || newFiber.index);
     if (matchedFiber) {
       // 如果找到了，可以进行节点复用
       // 复用旧fiber上面的信息，特别是Dom节点
@@ -158,7 +158,7 @@ export function reconCileChildren(returnFibers, children) {
         flags: Update,
       });
       // 删除map中的旧fiber
-      existingChildren.delete(matchedFiber.key | matchedFiber.index);
+      existingChildren.delete(matchedFiber.key || matchedFiber.index);
     }
     // 更新lastPlacedIndex的值
     lastPlacedIndex = placeChild(

@@ -92,7 +92,7 @@ export function mapRemainingChildren(returnFibers, currentFirstChild) {
   let existingChild = currentFirstChild;
   while (existingChild) {
     existingChildren.set(
-      existingChild.key | existingChild.index,
+      existingChild.key || existingChild.index,
       existingChild
     );
     // 切换到下一个兄弟节点

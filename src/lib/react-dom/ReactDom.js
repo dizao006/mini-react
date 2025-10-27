@@ -12,7 +12,6 @@ function updateContainer(childrenTree, container) {
     stateNode: container,
   });
   scheduleUpdateOnFiber(fiber);
-  return fiber;
 }
 
 class ReactDomRoot {

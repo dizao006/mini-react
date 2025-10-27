@@ -1,13 +1,17 @@
 import React from "./lib/react/React";
-import { useState } from "react";
+import { useState } from "./lib/react/ReactHooks";
 function App({ id }) {
-  // const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
 
   return (
     <div id={id}>
       <h1>Hello World</h1>
-      {/* <button onClick={() => setCount(count + 1)}>Click me</button>
-      <p>Count: {count}</p> */}
+      <div>
+        <button onClick={() => setCount(count - 1)}>-</button>
+        <span>{count}</span>
+        <button onClick={() => setCount(count + 1)}>+</button>
+      </div>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
       <ul>
         <li>苹果</li>
         <li>香蕉</li>
