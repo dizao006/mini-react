@@ -114,7 +114,7 @@ function siftDown(heap, node, i) {
         heap[index] = left;
         index = leftIndex;
       }
-    } else if (compare(right, node) < 0 && rightIndex < len) {
+    } else if (rightIndex < len && compare(right, node) < 0) {
       // 说明右节点过期时间更紧急，并且当前节点紧急程度大于左子树，所以不需要再对比左子树了
       heap[rightIndex] = node;
       heap[index] = right;

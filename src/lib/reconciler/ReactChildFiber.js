@@ -7,6 +7,7 @@ import {
   deleteChild,
 } from "./ReactChildAssistant";
 import { Update } from "../shared/utils";
+import schedulerCallBack from "../scheduler/Scheduler";
 /**
  * 该方法用以协调子节点，设计diff算法
  * @param {*} returnFibers 父fiber，父节点
@@ -113,7 +114,7 @@ export function reconCileChildren(returnFibers, children) {
   if (!oldFiber) {
     // 说明是初次渲染,需要将newChildren数组的每个元素都生成一个fiber对象
     for (; i < newChildren.length; i++) {
-      const newChildVnode = newChildren[i]
+      const newChildVnode = newChildren[i];
       if (newChildVnode === null) continue;
       // 下一步根据vnode生成新的fiber
       const newFiber = createFiber(newChildVnode, returnFibers);
@@ -185,4 +186,19 @@ export function reconCileChildren(returnFibers, children) {
       });
     }
   }
+}
+
+// 执行副作用函数
+export function invokeHooks(wip) {
+  const { updateQueue } = wip;
+  updateQueue.forEach((effect) => {
+    if (effect.destroy) {
+      effect.destroy();
+    }
+    // 执行副作用函数
+    // 并非直接执行，而是创建任务放到任务队列中
+    schedulerCallBack(() => {
+      effect.destroy = effect.create();
+    });
+  });
 }

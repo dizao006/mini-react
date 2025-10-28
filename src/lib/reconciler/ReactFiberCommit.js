@@ -1,4 +1,6 @@
 import { Placement, Update, updateNode } from "../shared/utils";
+import { invokeHooks } from "./ReactChildFiber";
+import { FunctionComponent } from "./ReactWorkTags";
 
 /**
  *
@@ -30,6 +32,16 @@ function commitNode(wip) {
   if (flags & Update && stateNode) {
     updateNode(stateNode, wip.alternate.props, wip.props);
   }
+  // 3 删除节点
+  if (wip.deletions) {
+    commitDeletions(wip.deletions, stateNode || parentDom);
+  }
+  // 4提交副作用函数
+  if (wip.tag === FunctionComponent) {
+    // 说明当前fiber为函数组件类型
+    // 处理一下hook
+    invokeHooks(wip);
+  }
 }
 function getParentDom(wip) {
   let temp = wip;
@@ -43,5 +55,27 @@ function getParentDom(wip) {
     temp = temp.return;
   }
   return null;
+}
+
+/**
+ *
+ * @param {*} deletions 当前fiber上要删除的fiber数组
+ * @param {*} parentDom 当前fiber对应的真实dom对象，如果没有dom，则寻找父dom
+ */
+function commitDeletions(deletions, parentDom) {
+  for (let i = 0; i < deletions.length; i++) {
+    const child = deletions[i];
+    // 删除fiber对应的stateNode
+    // 但是可能存在fiber没有对应的stateNode的情况
+    // 所以需要一直往下找对应的dom
+    parentDom.removeChild(getStateNode(child));
+  }
+}
+function getStateNode(fiber) {
+  let temp = fiber;
+  while (temp) {
+    temp = temp.child;
+  }
+  return temp.stateNode;
 }
 export default commitWork;

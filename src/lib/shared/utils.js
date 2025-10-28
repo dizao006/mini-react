@@ -62,3 +62,22 @@ export function updateNode(stateNode, preVal, nextVal) {
 export function getCurrentTime() {
   return performance.now();
 }
+
+/**
+ * 判断依赖项是否发生变化
+ * @param {*} nextDeps 本次的依赖项
+ * @param {*} prevDeps 旧的的依赖项
+ * @returns 是否发生变化
+ */
+export function areHookInputsEqual(nextDeps, prevDeps) {
+  if (prevDeps === null) {
+    return false;
+  }
+  for (let i = 0; i < prevDeps.length && i < nextDeps.length; i++) {
+    if (Object.is(nextDeps[i], prevDeps[i])) {
+      continue;
+    }
+    return false;
+  }
+  return true;
+}

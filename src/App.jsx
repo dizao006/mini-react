@@ -1,8 +1,26 @@
 import React from "./lib/react/React";
-import { useState } from "./lib/react/ReactHooks";
+import { useState, useReducer, useEffect } from "./lib/react/ReactHooks";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "increment":
+      return state + 1;
+    case "decrement":
+      return state - 1;
+    default:
+      return state;
+  }
+}
+
 function App({ id }) {
   const [count, setCount] = useState(0);
-
+  const [state, dispatch] = useReducer(reducer, 0);
+  useEffect(() => {
+    console.log("useEffect", count);
+    return () => {
+      console.log("useEffect cleanup", count);
+    };
+  }, [count]);
   return (
     <div id={id}>
       <h1>Hello World</h1>
@@ -11,7 +29,8 @@ function App({ id }) {
         <span>{count}</span>
         <button onClick={() => setCount(count + 1)}>+</button>
       </div>
-      <button onClick={() => setCount(count + 1)}>Click me</button>
+      <button onClick={() => dispatch({ type: "increment" })}>{state}</button>
+
       <ul>
         <li>苹果</li>
         <li>香蕉</li>
